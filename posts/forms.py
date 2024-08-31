@@ -1,0 +1,19 @@
+from django import forms
+from django.forms import ModelForm
+
+from posts.models import Post
+
+
+class PostCreateForm(ModelForm):
+  class Meta:
+    model = Post
+    exclude = ['id']
+    labels = {
+      'body': 'Caption'
+    }
+    widgets = {
+      'body': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add a caption ...', 'class': 'font1 text-4xl'}),
+      'url': forms.TextInput(attrs={'placeholder': 'Add url'})
+    }
+
+    
