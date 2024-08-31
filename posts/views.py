@@ -1,7 +1,7 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
-from posts.forms import PostCreateForm
+from posts.forms import PostCreateForm, PostEditForm
 from posts.utils import scrape_flickr
 
 from .models import Post
@@ -39,3 +39,34 @@ def post_create_view(request):
         messages.error(request, "Failed to scrape data. Post created with form data only.")
 
     return redirect('home')       
+
+def post_delete_view(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.method == "POST":
+        post.delete()
+        messages.success(request, "Post deleted successfully!")
+
+        return redirect('home')
+
+    return render(request, 'posts/post_delete.html', {"post": post})
+
+def post_edit_view(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    form = PostEditForm(instance=post)
+    context = {'post': post, 'form': form }
+
+    if request.method == "POST":
+        form = PostEditForm(instance=post, data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Post edited successfully")
+            return redirect('home')
+
+    return render(request, 'posts/post_edit.html', context)
+
+def post_page_view(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    return render(request, {"post": post})

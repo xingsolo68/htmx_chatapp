@@ -22,5 +22,7 @@ from posts import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_view, name='home'),
-    path('post/create/', views.post_create_view, name='post-create' )
+    path('posts/create/', views.post_create_view, name='post_create'),
+    path('posts/<uuid:post_id>/delete', views.post_delete_view, name='post_delete'),
+    path('posts/<uuid:post_id>/edit', views.post_edit_view, name='post_edit')
 ]

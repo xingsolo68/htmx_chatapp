@@ -28,7 +28,7 @@
           {% endfor %}
       </div> {% endcomment %}
       <div class="flex items-center justify-between text-sm px-2">
-          {% comment %} <a class="font-bold hover:underline" href="{% url 'post' post.id %}">
+           <a class="font-bold hover:underline" href="{% url 'post' post.id %}">
               {% if post.comments.count %}
               Comments
               <span id="commentscount-{{ post.id }}" class="font-light text-gray-500 ml-1">{{ post.comments.count }}</span>
@@ -37,16 +37,16 @@
                   Add comment
                   {% endif %}
               {% endif %}
-          </a> {% endcomment %}
-          {% comment %} <div class="flex items-center gap-4 [&>a:hover]:underline">
+          </a> 
+           <div class="flex items-center gap-4 [&>a:hover]:underline">
               
-              {% include 'snippets/likes.html' %}
+              {% comment %} {% include 'snippets/likes.html' %} {% endcomment %}
 
-              {% if user.is_authenticated and user == post.author %}
-              <a href="{% url 'post-edit' post.id %}">Edit</a>
-              <a href="{% url 'post-delete' post.id %}">Delete</a>
-              {% endif %}
-          </div> {% endcomment %}
+              {% comment %} {% if user.is_authenticated and user == post.author %} {% endcomment %}
+              <a href="{% url 'post_edit' post.id %}">Edit</a>
+              <a href="{% url 'post_delete' post.id %}">Delete</a>
+              {% comment %} {% endif %} {% endcomment %}
+          </div>
       </div>
   </div>
 </article>
