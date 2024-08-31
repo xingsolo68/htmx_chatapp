@@ -1,33 +1,41 @@
-import requests
-from bs4 import BeautifulSoup
+from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from posts.forms import PostCreateForm
+from posts.utils import scrape_flickr
 
 from .models import Post
 
-# Create your views here.
 
 def home_view(request):
-  posts = Post.objects.all()
-
-  return render(request, 'index.html', {"posts": posts})
+    posts = Post.objects.all()
+    return render(request, 'index.html', {"posts": posts})
 
 def post_create_view(request):
-  form = PostCreateForm()
-  # body = json.loads(request.body)  
+    if request.method != 'POST':
+        return render(request, 'posts/post_create.html', {"form": PostCreateForm()})
 
-  if request.method == 'POST':
     form = PostCreateForm(request.POST)
-    
-    if form.is_valid():
-      post = form.save(commit=False)
+    if not form.is_valid():
+        messages.error(request, "Form is not valid. Please check your input.")
+        return render(request, 'posts/post_create.html', {"form": form})
 
-      website = requests.get(form.data['url'])
-      
-      sourcecode = BeautifulSoup(website.text, 'html.parser')
+    post = form.save(commit=False)
+    url = form.cleaned_data['url']
+    result = scrape_flickr(url)
 
-      post.save()
-      return redirect('home')
+    if result:
+        post.image = result.get('image', '')
+        post.title = result.get('title', '')
+        post.artist = result.get('artist', '')
 
-  return render(request, 'posts/post_create.html', {"form" : form}) 
+    post.save()
+
+    if result and all([post.image, post.title, post.artist]):
+        messages.success(request, "Post created successfully with all data!")
+    elif result:
+        messages.warning(request, "Post created, but some data couldn't be scraped.")
+    else:
+        messages.error(request, "Failed to scrape data. Post created with form data only.")
+
+    return redirect('home')       
