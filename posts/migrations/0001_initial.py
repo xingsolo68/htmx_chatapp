@@ -5,21 +5,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.UUIDField(default=uuid.UUID('f52d9e62-3050-43db-a954-8c5df2f231c2'), primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=255)),
-                ('image', models.URLField()),
-                ('body', models.CharField(max_length=255)),
-                ('created', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.UUID("f52d9e62-3050-43db-a954-8c5df2f231c2"),
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("image", models.URLField()),
+                ("body", models.CharField(max_length=255)),
+                ("created", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

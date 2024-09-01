@@ -5,30 +5,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('posts', '0001_initial'),
+        ("posts", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='body',
+            model_name="post",
+            name="body",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='id',
-            field=models.UUIDField(default=uuid.UUID('b750d6d3-1185-4baa-a15c-d81fa5279666'), primary_key=True, serialize=False, unique=True),
+            model_name="post",
+            name="id",
+            field=models.UUIDField(
+                default=uuid.UUID("b750d6d3-1185-4baa-a15c-d81fa5279666"),
+                primary_key=True,
+                serialize=False,
+                unique=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='image',
+            model_name="post",
+            name="image",
             field=models.URLField(max_length=512),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='title',
+            model_name="post",
+            name="title",
             field=models.CharField(max_length=500),
         ),
     ]
