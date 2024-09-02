@@ -8,6 +8,7 @@ from .models import Post, Tag
 
 
 def home_view(request, tag_slug=None):
+    tag = ""
     if tag_slug:
         posts = Post.objects.filter(tags__slug=tag_slug)
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -15,7 +16,6 @@ def home_view(request, tag_slug=None):
         posts = Post.objects.all()
 
     categories = Tag.objects.all()
-
     return render(
         request, "index.html", {"posts": posts, "categories": categories, "tag": tag}
     )

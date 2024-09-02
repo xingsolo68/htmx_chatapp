@@ -18,12 +18,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from posts import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
     path("", views.home_view, name="home"),
     path("posts/category/<slug:tag_slug>", views.home_view, name="post_category"),
     path("posts/create/", views.post_create_view, name="post_create"),
@@ -33,3 +34,4 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

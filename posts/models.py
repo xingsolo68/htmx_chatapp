@@ -27,6 +27,10 @@ class Tag(models.Model):
     name = models.CharField(max_length=20)
     slug = models.SlugField(max_length=20, unique=True)
     image = models.FileField(upload_to="icons/", null=True, blank=True)
+    order = models.IntegerField(null=True)
 
     def __str__(self) -> str:
         return self.name
+
+    class Meta:
+        ordering = ["order"]
