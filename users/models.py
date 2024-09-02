@@ -12,3 +12,10 @@ class Profile(models.Model):
     location = models.CharField(max_length=20, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def full_name(self):
+        return self.first_name + " " + self.last_name
+
+    def __str__(self) -> str:
+        return self.full_name

@@ -5,7 +5,7 @@
     <ul class="hoverlist">
       {% for category in categories %}
         <li class="{% if category.slug == tag.slug %}highlight{% endif %}">
-          <a href="{% url 'post_category' category.slug %}">
+          <a href="{% url 'posts:category' category.slug %}">
             {% if category.image %}
               <img class="w-8 h-8 object-cover mr-2" src="{{ category.image.url }}" alt="{{ category.name }}" />
             {% else %}
@@ -29,7 +29,7 @@
             <div class="flex items-center truncate">
               <img class="w-10 h-10 rounded-lg object-cover mr-3 shrink-0" src="{{ post.image }}" />
               {% if post.author %}
-                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{{ post.author.profile.avatar }}" />
+                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{{ post.author.profile.image.url }}" />
                 <span class="font-bold text-sm mr-1">{{ post.author.username }}</span>
               {% else %}
                 <img class="w-6 h-6 rounded-full object-cover mr-1" src="{% static 'images/avatar_default.svg' %}" />
@@ -37,6 +37,8 @@
               {% endif %}
             </div>
             <span class="{% if user in post.likes.all %}
+                
+                
                 
                 
                 
@@ -52,6 +54,8 @@
 
 
 
+
+
               {% else %}
                 
                 
@@ -60,7 +64,11 @@
                 
                 
                 
+                
+                
                 font-light
+
+
 
 
 
@@ -87,7 +95,7 @@
           <a href="{% url 'post' comment.parent_post.id %}" class="flex items-stretch justify-between">
             <div class="flex items-center truncate">
               {% if comment.author %}
-                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{{ comment.author.profile.avatar }}" />
+                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{{ comment.author.profile.image.url }}" />
               {% else %}
                 <img class="w-6 h-6 rounded-full object-cover mr-1" src="{% static 'images/avatar_default.svg' %}" />
               {% endif %}
@@ -107,7 +115,11 @@
                 
                 
                 
+                
+                
                 font-bold
+
+
 
 
 
@@ -123,7 +135,11 @@
                 
                 
                 
+                
+                
                 font-light
+
+
 
 
 
