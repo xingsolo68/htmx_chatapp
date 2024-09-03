@@ -33,8 +33,7 @@
            <a class="font-bold hover:underline" href="{% url 'posts:detail' post.id %}">
               {% if post.comments.count %}
               Comments
-              <sp id="commentscount-{{ post.id }}" class="font-light text-gray-500 ml-1">{{ post.comments.count }}</sp
-              an>
+              <span id="commentscount-{{ post.id }}" class="font-light text-gray-500 ml-1">{{ post.comments.count }}</span>
               {% else %}
                   {% if user.is_authenticated %}
                   Add comment
@@ -42,9 +41,7 @@
               {% endif %}
           </a> 
            <div class="flex items-center gap-4 [&>a:hover]:underline">
-              
-              {% comment %} {% include 'snippets/likes.html' %} {% endcomment %}
-
+              {% include 'snippets/likes.html' %}
                {% if user.is_authenticated and user == post.author %} 
                 <a href="{% url 'posts:edit' post.id%}">Edit</a>
               <a href="{% url 'posts:delete' post.id %}">Delete</a>

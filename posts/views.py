@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
 from posts.forms import CommentForm, PostCreateForm, PostEditForm, ReplyForm
@@ -15,9 +16,10 @@ def home_view(request, tag_slug=None):
     else:
         posts = Post.objects.all()
 
-    categories = Tag.objects.all()
     return render(
-        request, "index.html", {"posts": posts, "categories": categories, "tag": tag}
+        request,
+        "posts/home.html",
+        {"posts": posts, "tag": tag},
     )
 
 
@@ -84,17 +86,33 @@ def post_edit_view(request, post_id):
     return render(request, "posts/post_edit.html", context)
 
 
-def post_page_view(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-
+def post_page_view(request, pk):
+    post = get_object_or_404(Post, id=pk)
     commentform = CommentForm()
     replyform = ReplyForm()
 
-    return render(
-        request,
-        "posts/post_page.html",
-        {"post": post, "commentform": commentform, "replyform": replyform},
-    )
+    if request.htmx:
+        if "top" in request.GET:
+            comments = (
+                post.comments.annotate(num_likes=Count("likes"))
+                .filter(num_likes__gt=0)
+                .order_by("-num_likes")
+            )
+        else:
+            comments = post.comments.all()
+        return render(
+            request,
+            "snippets/loop_postpage_comments.html",
+            {"comments": comments, "replyform": replyform},
+        )
+
+    context = {
+        "post": post,
+        "commentform": commentform,
+        "replyform": replyform,
+    }
+
+    return render(request, "posts/post_page.html", context)
 
 
 def comment_sent(request, post_id):
@@ -148,3 +166,37 @@ def reply_delete(request, reply_id):
         return redirect("posts:detail", reply.comment.post.id)
 
     return render(request, "posts/reply_delete.html", {"reply": reply})
+
+
+def like_toggle(model):
+    def inner_func(func):
+        def wrapper(request, *args, **kwargs):
+            post = get_object_or_404(model, id=kwargs.get("pk"))
+            user_exist = post.likes.filter(username=request.user.username).exists()
+
+            if post.author != request.user:
+                if user_exist:
+                    post.likes.remove(request.user)
+                else:
+                    post.likes.add(request.user)
+
+            return func(request, post)
+
+        return wrapper
+
+    return inner_func
+
+
+@like_toggle(Post)
+def like_post(request, post):
+    return render(request, "snippets/likes.html", {"post": post})
+
+
+@like_toggle(Comment)
+def like_comment(request, post):
+    return render(request, "snippets/likes_comment.html", {"comment": post})
+
+
+@like_toggle(Reply)
+def like_reply(request, post):
+    return render(request, "snippets/likes_reply.html", {"reply": post})
