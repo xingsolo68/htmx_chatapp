@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.templatetags.static import static
 
 
 # Create your models here.
@@ -16,6 +17,14 @@ class Profile(models.Model):
     @property
     def full_name(self):
         return self.first_name + " " + self.last_name
+
+    @property
+    def avatar(self):
+        try:
+            avatar = self.image.url
+        except:
+            avatar = static("images/avatar_default.svg")
+        return avatar
 
     def __str__(self) -> str:
         return self.full_name

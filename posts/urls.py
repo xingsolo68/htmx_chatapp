@@ -26,6 +26,12 @@ app_name = "posts"
 urlpatterns = [
     path("category/<slug:tag_slug>", views.home_view, name="category"),
     path("create/", views.post_create_view, name="create"),
+    path(
+        "comment/<str:comment_id>/delete/", views.comment_delete, name="comment_delete"
+    ),
+    path("reply/<str:reply_id>/delete/", views.reply_delete, name="reply_delete"),
+    path("comment/<str:post_id>/", views.comment_sent, name="comment_sent"),
+    path("reply/<str:comment_id>/", views.reply_sent, name="reply_sent"),
     path("<uuid:post_id>/delete/", views.post_delete_view, name="delete"),
     path("<uuid:post_id>/edit/", views.post_edit_view, name="edit"),
     path("<uuid:post_id>/", views.post_page_view, name="detail"),

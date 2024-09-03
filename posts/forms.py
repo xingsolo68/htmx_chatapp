@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from posts.models import Post
+from posts.models import Comment, Post, Reply
 
 
 class PostCreateForm(ModelForm):
@@ -39,4 +39,26 @@ class PostEditForm(ModelForm):
             ),
             "url": forms.TextInput(attrs={"placeholder": "Add url"}),
             "tags": forms.CheckboxSelectMultiple(),
+        }
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(
+                attrs={"rows": 3, "placeholder": "Add a comment ..."}
+            ),
+        }
+
+
+class ReplyForm(ModelForm):
+    class Meta:
+        model = Reply
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(
+                attrs={"rows": 3, "placeholder": "Add a reply ..."}
+            ),
         }
