@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -16,11 +17,16 @@ def home_view(request, tag_slug=None):
     else:
         posts = Post.objects.all()
 
-    return render(
-        request,
-        "posts/home.html",
-        {"posts": posts, "tag": tag},
-    )
+    paginator = Paginator(posts, 2)
+    page_number = int(request.GET.get("page", 1))
+    posts = paginator.get_page(page_number)
+
+    context = {"posts": posts, "tag": tag, "page": page_number}
+
+    if request.htmx:
+        return render(request, "snippets/loop_home_posts.html", context)
+
+    return render(request, "posts/home.html", context)
 
 
 def post_create_view(request):

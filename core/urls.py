@@ -24,9 +24,9 @@ from django.urls import include, path
 from posts import views
 
 urlpatterns = [
+    path("", views.home_view, name="home"),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
-    path("", views.home_view, name="home"),
     path("posts/", include("posts.urls")),
     path("profile/", include("users.urls")),
 ]
